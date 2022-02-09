@@ -1,25 +1,49 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"go1/internal/player"
 )
 
-func readRowColumn() (row byte, column byte) {
-	fmt.Println("Enter row and column")
-	fmt.Scan(&row, &column)
-	return row, column
-}
-
 func main() {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("What will you play? ")
-	chip, _ := reader.ReadString('\n')
-	fmt.Println("You play with: " + chip)
+	var player1, player2 player.Player
+	var sideX bool
+	for {
+		var name string
+		fmt.Println("Enter name of player 1")
+		fmt.Scan(&name)
+		fmt.Println("Enter your side (enter 'true' to play with X)")
+		_, err := fmt.Scan(&sideX)
+		if err != nil {
+			fmt.Println(err.Error())
+			continue
+		}
+		player1, err = player.NewPlayer(name, sideX == true)
+		if err != nil {
+			fmt.Println(err.Error())
+			continue
+		}
+		break
+	}
 
-	// enter row and column
-	var row, column byte
-	row, column = readRowColumn()
-	fmt.Printf("Row: %v; Column: %v ", row, column)
+	for {
+		var name string
+		var err error
+		fmt.Println("Enter name of player 2")
+		fmt.Scan(&name)
+		player2, err = player.NewPlayer(name, sideX == false)
+		if err != nil {
+			fmt.Println(err.Error())
+			continue
+		}
+		break
+	}
+
+	for {
+		var row, column uint
+		fmt.Println(player1.GetName() + " make your move")
+		fmt.Scan(&row, &column)
+		fmt.Println(player2.GetName() + " make your move")
+		fmt.Scan(&row, &column)
+	}
 }
