@@ -4,15 +4,15 @@ import "errors"
 
 type Player struct {
 	name      string
-	sideX     bool
+	chip      string
 	winsCount uint
 }
 
-func NewPlayer(name string, sideX bool) (Player, error) {
+func NewPlayer(name string, chip string) (Player, error) {
 	if err := validateName(name); err != nil {
 		return Player{}, err
 	}
-	return Player{name, sideX, 0}, nil
+	return Player{name, chip, 0}, nil
 }
 
 func validateName(name string) error {
@@ -45,4 +45,8 @@ func (p Player) GetWins() uint {
 
 func (p Player) GetName() string {
 	return p.name
+}
+
+func (p Player) GetChip() string {
+	return p.chip
 }

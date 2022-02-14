@@ -2,23 +2,42 @@ package main
 
 import (
 	"fmt"
+	"go1/internal/gamefield"
 	"go1/internal/player"
 )
 
 func main() {
+	var gmfield gamefield.Gamefield
+	var err error
 	var player1, player2 player.Player
-	var sideX bool
+	var side string
+
+	for {
+		var size uint
+		fmt.Println("Enter size of gamefield")
+		fmt.Scan(&size)
+		if gmfield, err = gamefield.NewGamefield(size); err != nil {
+			fmt.Println(err.Error())
+			continue
+		}
+		break
+	}
+
 	for {
 		var name string
 		fmt.Println("Enter name of player 1")
 		fmt.Scan(&name)
-		fmt.Println("Enter your side (enter 'true' to play with X)")
-		_, err := fmt.Scan(&sideX)
+		fmt.Println("Enter player 1 chip, 'x' or '0' ")
+		_, err := fmt.Scan(&side)
 		if err != nil {
-			fmt.Println(err.Error())
+			fmt.Println("Side enter error: ", err.Error())
 			continue
 		}
-		player1, err = player.NewPlayer(name, sideX == true)
+		if side != "x" && side != "0" {
+			fmt.Println("x or 0 please.")
+			continue
+		}
+		player1, err = player.NewPlayer(name, side)
 		if err != nil {
 			fmt.Println(err.Error())
 			continue
@@ -28,10 +47,13 @@ func main() {
 
 	for {
 		var name string
-		var err error
 		fmt.Println("Enter name of player 2")
 		fmt.Scan(&name)
-		player2, err = player.NewPlayer(name, sideX == false)
+		var side2 string = "x"
+		if side == "x" {
+			side2 = "0"
+		}
+		player2, err = player.NewPlayer(name, side2)
 		if err != nil {
 			fmt.Println(err.Error())
 			continue
@@ -39,11 +61,25 @@ func main() {
 		break
 	}
 
-	for {
-		var row, column uint
-		fmt.Println(player1.GetName() + " make your move")
-		fmt.Scan(&row, &column)
-		fmt.Println(player2.GetName() + " make your move")
-		fmt.Scan(&row, &column)
+	var player player.Player
+	var row, column uint
+
+	for i := 1; ; i++ {
+		player = player1
+		if i%2 == 0 {
+			player = player2
+		}
+
+		for {
+			fmt.Println(player.GetName() + " make your move")
+			fmt.Scan(&row, &column)
+			if err = gmfield.SetCell(row, column, player.GetChip()); err != nil {
+				fmt.Println(err)
+				continue
+			}
+			break
+		}
+
+		gmfield.Print()
 	}
 }
