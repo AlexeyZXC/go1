@@ -73,9 +73,12 @@ func main() {
 		for {
 			fmt.Println(player.GetName() + " make your move")
 			fmt.Scan(&row, &column)
-			if err = gmfield.SetCell(row, column, player.GetChip()); err != nil {
+			if status, err := gmfield.SetCell(row, column, player.GetChip()); err != nil {
 				fmt.Println(err)
 				continue
+			} else if status != "" {
+				fmt.Println(status)
+				return
 			}
 			break
 		}
