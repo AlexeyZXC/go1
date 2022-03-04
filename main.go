@@ -2,13 +2,36 @@ package main
 
 import (
 	"fmt"
+	"go1/internal/configHelper"
 	"go1/internal/gamefield"
 	"go1/internal/player"
 )
 
 func main() {
-	var gmfield gamefield.Gamefield
+
 	var err error
+	//conf := configHelper.Config{}
+	conf := configHelper.Config{Port: 8080, Db_url: "https://github.com/AlexeyZXC/go1"}
+
+	configHelper.SetPrefix("myPref")
+	err = conf.WriteEnvVar()
+	if err != nil {
+		fmt.Println("WriteEnvVar error: ", err)
+		return
+	}
+
+	fmt.Println("WriteEnvVar ok")
+
+	if err := conf.ReadEnvVar(); err != nil {
+		fmt.Println("ReadEnvVar error: ", err)
+		return
+	}
+	fmt.Println("ReadEnvVar ok", conf)
+
+	//-----------------------------
+
+	var gmfield gamefield.Gamefield
+	//var err error
 	var player1, player2 player.Player
 	var side string
 
