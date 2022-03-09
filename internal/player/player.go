@@ -8,6 +8,9 @@ type Player struct {
 	winsCount uint
 }
 
+const errPlayerNameNotLess = "Имя должно быть длиной больше 3"
+const errPlayerNameNoSpaces = "В имени не может быть пробела"
+
 func NewPlayer(name string, chip string) (Player, error) {
 	if err := validateName(name); err != nil {
 		return Player{}, err
@@ -17,11 +20,11 @@ func NewPlayer(name string, chip string) (Player, error) {
 
 func validateName(name string) error {
 	if len(name) < 3 {
-		return errors.New("Имя должно быть длиной больше 3")
+		return errors.New(errPlayerNameNotLess)
 	}
 	for _, x := range name {
 		if x == ' ' {
-			return errors.New("В имени не может быть пробела")
+			return errors.New(errPlayerNameNoSpaces)
 		}
 	}
 	return nil

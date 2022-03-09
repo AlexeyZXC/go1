@@ -3,7 +3,10 @@ package main
 import (
 	"fmt"
 	"go1/internal/configHelper"
+	"go1/internal/console"
 	"go1/internal/gamefield"
+	"go1/internal/interfaces"
+	"go1/internal/logic"
 	"go1/internal/player"
 )
 
@@ -35,12 +38,18 @@ func main() {
 	var player1, player2 player.Player
 	var side string
 
+	var logic logic.Logic
+
+	var irw interfaces.IReadWrite
+	var console console.ReadWrite
+	irw = console //use console as input/output
+
 	for {
 		var size uint
-		fmt.Println("Enter size of gamefield")
-		fmt.Scan(&size)
-		if gmfield, err = gamefield.NewGamefield(size); err != nil {
-			fmt.Println(err.Error())
+		irw.Write("Enter size of gamefield")
+		irw.Read(&size)
+		if gmfield, err = gamefield.NewGamefield(size, logic, console); err != nil {
+			irw.Write(err.Error())
 			continue
 		}
 		break
@@ -48,21 +57,21 @@ func main() {
 
 	for {
 		var name string
-		fmt.Println("Enter name of player 1")
-		fmt.Scan(&name)
-		fmt.Println("Enter player 1 chip, 'x' or '0' ")
-		_, err := fmt.Scan(&side)
+		irw.Write("Enter name of player 1")
+		irw.Read(&name)
+		irw.Write("Enter player 1 chip, 'x' or '0' ")
+		_, err := irw.Read(&side)
 		if err != nil {
-			fmt.Println("Side enter error: ", err.Error())
+			irw.Write("Side enter error: ", err.Error())
 			continue
 		}
 		if side != "x" && side != "0" {
-			fmt.Println("x or 0 please.")
+			irw.Write("x or 0 please.")
 			continue
 		}
 		player1, err = player.NewPlayer(name, side)
 		if err != nil {
-			fmt.Println(err.Error())
+			irw.Write(err.Error())
 			continue
 		}
 		break
@@ -70,15 +79,15 @@ func main() {
 
 	for {
 		var name string
-		fmt.Println("Enter name of player 2")
-		fmt.Scan(&name)
+		irw.Write("Enter name of player 2")
+		irw.Read(&name)
 		var side2 string = "x"
 		if side == "x" {
 			side2 = "0"
 		}
 		player2, err = player.NewPlayer(name, side2)
 		if err != nil {
-			fmt.Println(err.Error())
+			irw.Write(err.Error())
 			continue
 		}
 		break
@@ -94,13 +103,13 @@ func main() {
 		}
 
 		for {
-			fmt.Println(player.GetName() + " make your move")
-			fmt.Scan(&row, &column)
+			irw.Write(player.GetName() + " make your move")
+			irw.Read(&row, &column)
 			if status, err := gmfield.SetCell(row, column, player.GetChip()); err != nil {
-				fmt.Println(err)
+				irw.Write(err)
 				continue
 			} else if status != "" {
-				fmt.Println(status)
+				irw.Write(status)
 				return
 			}
 			break
