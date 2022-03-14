@@ -13,23 +13,38 @@ import (
 func main() {
 
 	var err error
-	//conf := configHelper.Config{}
-	conf := configHelper.Config{Port: 8080, Db_url: "https://github.com/AlexeyZXC/go1"}
+	conf := configHelper.Config{}
 
-	configHelper.SetPrefix("myPref")
-	err = conf.WriteEnvVar()
-	if err != nil {
-		fmt.Println("WriteEnvVar error: ", err)
-		return
+	var useEnvironmentVarsConfig bool = false
+	var useYamlConfig bool = true
+
+	if useYamlConfig == true {
+		if err = conf.ReadFromYaml(); err != nil {
+			fmt.Println("ReadFromYaml error: ", err, conf)
+			return
+		}
+		fmt.Println("ReadFromYaml ok: ", conf)
 	}
 
-	fmt.Println("WriteEnvVar ok")
+	if useEnvironmentVarsConfig == true {
 
-	if err := conf.ReadEnvVar(); err != nil {
-		fmt.Println("ReadEnvVar error: ", err)
-		return
+		conf = configHelper.Config{Port: 8080, Db_url: "https://github.com/AlexeyZXC/go1"}
+
+		configHelper.SetPrefix("myPref")
+		err = conf.WriteEnvVar()
+		if err != nil {
+			fmt.Println("WriteEnvVar error: ", err)
+			return
+		}
+
+		fmt.Println("WriteEnvVar ok")
+
+		if err := conf.ReadEnvVar(); err != nil {
+			fmt.Println("ReadEnvVar error: ", err, conf)
+			return
+		}
+		fmt.Println("ReadEnvVar ok", conf)
 	}
-	fmt.Println("ReadEnvVar ok", conf)
 
 	//-----------------------------
 
