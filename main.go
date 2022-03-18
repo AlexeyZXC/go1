@@ -10,13 +10,17 @@ import (
 	"go1/internal/player"
 )
 
+var ConsoleTest console.ReadWriteTest
+
 func main() {
 
+	// --- here is configuration lesson
+	// --- game starts below ---
 	var err error
 	conf := configHelper.Config{}
 
 	var useEnvironmentVarsConfig bool = false
-	var useYamlConfig bool = true
+	var useYamlConfig bool = false
 
 	if useYamlConfig == true {
 		if err = conf.ReadFromYaml(); err != nil {
@@ -46,7 +50,7 @@ func main() {
 		fmt.Println("ReadEnvVar ok", conf)
 	}
 
-	//-----------------------------
+	//----------------------------- game starts here -------------------
 
 	var gmfield gamefield.Gamefield
 	//var err error
@@ -56,14 +60,21 @@ func main() {
 	var logic logic.Logic
 
 	var irw interfaces.IReadWrite
-	var console console.ReadWrite
-	irw = console //use console as input/output
+
+	// var console console.ReadWrite
+	// irw = console //use console as input/output
+
+	ConsoleTest.Init()
+	irw = ConsoleTest //use console as input/output
 
 	for {
 		var size uint
+		size = 2
 		irw.Write("Enter size of gamefield")
 		irw.Read(&size)
-		if gmfield, err = gamefield.NewGamefield(size, logic, console); err != nil {
+		irw.Write("size is ", size)
+
+		if gmfield, err = gamefield.NewGamefield(size, logic, ConsoleTest); err != nil {
 			irw.Write(err.Error())
 			continue
 		}
