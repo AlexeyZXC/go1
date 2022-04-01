@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"go1/internal/configHelper"
-	"go1/internal/console"
-	"go1/internal/gamefield"
-	"go1/internal/interfaces"
-	"go1/internal/logic"
-	"go1/internal/player"
+
+	"github.com/AlexeyZXC/go1/v2/internal/configHelper"
+	"github.com/AlexeyZXC/go1/v2/internal/console"
+	"github.com/AlexeyZXC/go1/v2/internal/gamefield"
+	"github.com/AlexeyZXC/go1/v2/internal/interfaces"
+	"github.com/AlexeyZXC/go1/v2/internal/logic"
+	"github.com/AlexeyZXC/go1/v2/internal/player"
 )
 
 var ConsoleTest console.ReadWriteTest

@@ -2,7 +2,8 @@ package gamefield
 
 import (
 	"errors"
-	"go1/internal/interfaces"
+
+	"github.com/AlexeyZXC/go1/v2/internal/interfaces"
 )
 
 // type ICheckGameStatus interface {
