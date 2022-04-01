@@ -1,8 +1,9 @@
 package main
 
 import (
-	"go1/internal/console"
 	"testing"
+
+	"github.com/AlexeyZXC/go1/v2/internal/console"
 )
 
 func Test_1(t *testing.T) {
